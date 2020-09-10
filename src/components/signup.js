@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
+import { withRouter } from 'react-router-dom'
 
 //Adjust validation constraints
 const signupSchema = Yup.object().shape({
@@ -19,6 +20,13 @@ const signupSchema = Yup.object().shape({
 
 
 class Signup extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      message: ''
+    }
+  }
+
   render() {
     return (
       <div className="jumbotron">
@@ -34,10 +42,24 @@ class Signup extends React.Component {
                 confirmPassword: ''
               }}
               validationSchema={signupSchema}
-              onSubmit={fields => {
+              onSubmit={(values, bag) => {
                 //Send data to the server
                 //TEMP
-                alert('Success\n\n' + JSON.stringify(fields, null, 3))
+                this.props.onSignup(values.username, values.email, values.password).then(response => {
+                  if (response.data.message && response.data.message === 'Signed up successfully!') {
+                    this.setState({
+                      message: response.data.message
+                    })
+                    setTimeout(() => { this.props.history.push('/login') }, 2000)
+                  }
+                }).catch(error => {
+                  const resMessage = (error.response && error.response.data && error.response.data.message) ||
+                  error.message || error.toString()
+                  this.setState({
+                    message: resMessage
+                  });
+                  bag.setSubmitting(false)
+                })
               }}
               >
               {({ errors, touched }) => (
@@ -66,6 +88,10 @@ class Signup extends React.Component {
                     <button type="submit" className="btn btn-primary mr-2">Sign Up</button>
                     <button type="reset" className="btn btn-secondary">Reset</button>
                   </div>
+                  { this.state.message &&
+                    <div className={this.state.message === 'Signed up successfully!' ? "alert alert-success mt-2" : "alert alert-danger mt-2" }>
+                      {this.state.message}
+                    </div> }
                 </Form>
               )}
             </Formik>
@@ -77,4 +103,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup;
+export default withRouter(Signup);
