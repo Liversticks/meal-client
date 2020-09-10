@@ -1,71 +1,86 @@
 import React from 'react';
 import { BrowserRouter, Switch, Link, Route, Redirect } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
+import axios from 'axios'
+import './App.css'
 
 
-import MyAuth from './requests/auth'
-import MealService from './requests/meals'
+import { getCurrentUser } from './requests/get-username'
+import authToken from './requests/get-token'
 
 import Signup from './components/signup'
 import Login from './components/login'
 import MainBoard from './components/board/main-board'
+import Footer from './components/footer'
+
+const MEAL_URL = 'http://localhost:5000/meals'
+const LOGIN_URL = 'http://localhost:5000/login'
+const SIGNUP_URL = 'http://localhost:5000/signup'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.logout = this.logout.bind(this)
     this.state = {
-      currentUser: MyAuth.getCurrentUser() ? MyAuth.getCurrentUser(): undefined,
+      currentUser: getCurrentUser() ? getCurrentUser(): undefined,
       mealList: []
     }
-    this.setUser = this.setUser.bind(this)
-    this.login = this.login.bind(this)
-    this.fetchMeals = this.fetchMeals.bind(this)
+    this.update = this.update.bind(this)
   }
 
-  setUser() {
-    const user = MyAuth.getCurrentUser();
-    console.log(user)
+  update() {
+    const user = getCurrentUser();
     if (user) {
       this.setState({
         currentUser: user
       })
     }
-  }
-
-  fetchMeals() {
-    MealService.getMeals().then(
+    axios.get(MEAL_URL, { headers: authToken() }).then(
       response => {
         this.setState({
           mealList: response.data
         })
       }
     ).catch(error => {
-      console.log("Should only be able to get meals when successfully logged in.")
+      //console.log("Should only be able to get meals when successfully logged in.")
       console.log(error.toString())
     })
   }
 
+  signup() {
+    return axios.post()
+  }
 
-  login() {
-    this.setUser()
-    this.fetchMeals()
+  login(username, password) {
+    return axios.post(LOGIN_URL, {
+      username: username,
+      password: password
+    })
+  }
+
+  onSignup(username, email, password) {
+    return axios.post(SIGNUP_URL, {
+      username: username,
+      email: email,
+      password: password
+    })
   }
 
   logout() {
-    MyAuth.logout()
+    localStorage.removeItem("user")
+    localStorage.removeItem("username")
     //window.alert('Successfully logged out.')
   }
 
   componentDidMount() {
-    this.login()
+    this.update()
   }
 
   render() {
     return (
       <BrowserRouter>
         <div>
-          <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+          <nav className="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
             <Link to={"/"} className="navbar-brand">
             Meals
             </Link>
@@ -73,7 +88,6 @@ class App extends React.Component {
               <span className="navbar-toggler-icon"/>
             </button>
             <div className="collapse navbar-collapse" id="navcollapse">
-
                 { this.state.currentUser ? (
                   <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li className="nav-item">
@@ -100,21 +114,19 @@ class App extends React.Component {
           </nav>
           <div>
             <Switch>
-
-
               <Route exact path={["/", "/meals"]}>
-                { this.state.currentUser ? <MainBoard dates={this.state.mealList}/> : <Redirect to="/login" />}
+                { this.state.currentUser ? <MainBoard onUpdate={this.update} dates={this.state.mealList}/> : <Redirect to="/login" />}
               </Route>
-
-
               <Route exact path="/login">
-                <Login onLogin={this.login}/>
+                { this.state.currentUser ? <Redirect to="/meals"/> : <Login onLogin={this.login} onLoginSuccess={this.update}/> }
               </Route>
-
               <Route exact path="/signup">
-                <Signup/>
+                { this.state.currentUser ? <Redirect to="/meals" /> : <Signup onSignup={this.onSignup}/>}
               </Route>
             </Switch>
+          </div>
+          <div>
+            <Footer/>
           </div>
         </div>
       </BrowserRouter>
