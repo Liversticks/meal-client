@@ -4,10 +4,6 @@ import authToken from './get-token'
 const API_URL = 'http://localhost:5000/meals'
 
 class MealService {
-  getMeals() {
-    return axios.get(API_URL, { headers: authToken() })
-  }
-
   newMeal(date, type, description) {
     return axios.post(API_URL, {
       date: date,
@@ -15,28 +11,29 @@ class MealService {
       meal_desc: description
     }, {
       headers: authToken()
-    }).then(response => {
-      console.log(response.data.message)
-      return response.data.message
-    }).catch(error => {
-      console.log(error.response.data.message)
-      return error.response.data.message
     })
   }
 
   editMeal(date, type, description) {
-    return axios.post(API_URL, {
+    return axios.put(API_URL, {
       date: date,
       meal_type: type,
       meal_desc: description
     }, {
       headers: authToken()
-    }).then(response => {
-      if (response.data.message && response.data.message == 'Meal details updated successfully!') {
-        //success
-        console.log("first")
+    })
+  }
+
+  deleteMeal(date, type) {
+    //console.log(type)
+    return axios({
+      url: API_URL,
+      method: 'delete',
+      headers: authToken(),
+      data: {
+        date: date,
+        meal_type: type
       }
-      return response.data.message
     })
   }
 }
