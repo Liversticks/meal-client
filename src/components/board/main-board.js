@@ -18,12 +18,12 @@ function MainBoard(props) {
 
   return (
     <Container>
-      <h1>Upcoming Meals</h1>
-      <CollapseWeek start={start1} end={end1} dates={props.dates}/>
-      <CollapseWeek start={start2} end={end2} dates={props.dates}/>
-      <CollapseWeek start={start3} end={end3} dates={props.dates}/>
-      <CollapseWeek start={start4} end={end4} dates={props.dates}/>
-      <CollapseWeek start={start5} end={end5} dates={props.dates}/>
+      <h1 className="mt-4 mb-4">Upcoming Meals</h1>
+      <CollapseWeek opened={true} onUpdate={props.onUpdate} start={start1} end={end1} dates={props.dates}/>
+      <CollapseWeek opened={false} onUpdate={props.onUpdate} start={start2} end={end2} dates={props.dates}/>
+      <CollapseWeek opened={false} onUpdate={props.onUpdate} start={start3} end={end3} dates={props.dates}/>
+      <CollapseWeek opened={false} onUpdate={props.onUpdate} start={start4} end={end4} dates={props.dates}/>
+      <CollapseWeek opened={false} onUpdate={props.onUpdate} start={start5} end={end5} dates={props.dates}/>
     </Container>
   )
 }

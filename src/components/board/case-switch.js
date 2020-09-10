@@ -2,7 +2,7 @@ import React from 'react'
 import EditForm from '../forms/edit-form'
 import BlankForm from '../forms/blank-form'
 import OtherForm from '../forms/other-form'
-import getUsername from '../../requests/get-username'
+import { getUsername } from '../../requests/get-username'
 
 function CaseSwitch(props) {
   /*
@@ -21,7 +21,7 @@ function CaseSwitch(props) {
   if (props.blob.hasOwnProperty('chef')) {
     if (props.blob.chef === getUsername()) {
       return (
-        <EditForm blob={props.blob}/>
+        <EditForm onUpdate={props.onUpdate} blob={props.blob}/>
       )
     } else {
       return (
@@ -30,7 +30,7 @@ function CaseSwitch(props) {
     }
   } else {
     return (
-      <BlankForm blob={props.blob}/>
+      <BlankForm onUpdate={props.onUpdate} blob={props.blob}/>
     )
   }
 }

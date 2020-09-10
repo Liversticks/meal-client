@@ -8,15 +8,15 @@ function Day(props) {
         <td>
           <div>
             <Col>
-              <div>{props.blob.dayOfWeek}</div>
+              <div className="day-of-week">{props.blob.dayOfWeek}</div>
               <div>{props.blob.formattedDay}</div>
             </Col>
           </div>
         </td>
-        <td><CaseSwitch blob={props.blob.breakfastBlob}/></td>
-        <td><CaseSwitch blob={props.blob.lunchBlob}/></td>
-        <td><CaseSwitch blob={props.blob.dinnerBlob}/></td>
-        <td><CaseSwitch blob={props.blob.snackBlob}/></td>
+        <td className="centered-cell"><CaseSwitch onUpdate={props.onUpdate} blob={props.blob.breakfastBlob}/></td>
+        <td className="centered-cell"><CaseSwitch onUpdate={props.onUpdate} blob={props.blob.lunchBlob}/></td>
+        <td className="centered-cell"><CaseSwitch onUpdate={props.onUpdate} blob={props.blob.dinnerBlob}/></td>
+        <td className="centered-cell"><CaseSwitch onUpdate={props.onUpdate} blob={props.blob.snackBlob}/></td>
       </tr>
   )
 }
