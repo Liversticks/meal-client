@@ -13,9 +13,11 @@ import Login from './components/login'
 import MainBoard from './components/board/main-board'
 import Footer from './components/footer'
 
-const MEAL_URL = 'http://localhost:5000/meals'
-const LOGIN_URL = 'http://localhost:5000/login'
-const SIGNUP_URL = 'http://localhost:5000/signup'
+import localConfig from './config/local-dev'
+
+const MEAL_URL = localConfig['meal_url']
+const LOGIN_URL = localConfig['login_url']
+const SIGNUP_URL = localConfig['signup_url']
 
 class App extends React.Component {
   constructor(props) {
@@ -23,7 +25,8 @@ class App extends React.Component {
     this.logout = this.logout.bind(this)
     this.state = {
       currentUser: getCurrentUser() ? getCurrentUser(): undefined,
-      mealList: []
+      mealList: [],
+      loginStale: false
     }
     this.update = this.update.bind(this)
   }
@@ -44,6 +47,11 @@ class App extends React.Component {
     ).catch(error => {
       //console.log("Should only be able to get meals when successfully logged in.")
       console.log(error.toString())
+      if (user) {
+        this.setState({
+          loginStale: true
+        })
+      }
     })
   }
 
@@ -69,6 +77,9 @@ class App extends React.Component {
   logout() {
     localStorage.removeItem("user")
     localStorage.removeItem("username")
+    this.setState({
+      loginStale: false
+    })
     //window.alert('Successfully logged out.')
   }
 
@@ -115,7 +126,7 @@ class App extends React.Component {
           <div>
             <Switch>
               <Route exact path={["/", "/meals"]}>
-                { this.state.currentUser ? <MainBoard onUpdate={this.update} dates={this.state.mealList}/> : <Redirect to="/login" />}
+                { this.state.currentUser ? <MainBoard onLogout={this.logout} stale={this.state.loginStale} onUpdate={this.update} dates={this.state.mealList}/> : <Redirect to="/login" />}
               </Route>
               <Route exact path="/login">
                 { this.state.currentUser ? <Redirect to="/meals"/> : <Login onLogin={this.login} onLoginSuccess={this.update}/> }

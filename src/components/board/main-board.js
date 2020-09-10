@@ -2,6 +2,7 @@ import React from 'react'
 import { Container } from 'react-bootstrap'
 import moment from 'moment'
 import CollapseWeek from './week'
+import LogoutWarning from './logout-warning'
 
 function MainBoard(props) {
   //entries: props.dates
@@ -18,6 +19,9 @@ function MainBoard(props) {
 
   return (
     <Container>
+      {props.stale &&
+        <LogoutWarning onLogout={props.onLogout}/>
+      }
       <h1 className="mt-4 mb-4">Upcoming Meals</h1>
       <CollapseWeek opened={true} onUpdate={props.onUpdate} start={start1} end={end1} dates={props.dates}/>
       <CollapseWeek opened={false} onUpdate={props.onUpdate} start={start2} end={end2} dates={props.dates}/>
