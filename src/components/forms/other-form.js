@@ -1,5 +1,7 @@
 import React from 'react'
-import { Modal, Card, Button } from 'react-bootstrap'
+import { Modal, Card, Button, Container } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 function OtherInnerModal(props) {
@@ -31,7 +33,9 @@ function OtherInnerModal(props) {
           </Card>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={props.onHide}>Got it</Button>
+          <Button variant="success" onClick={props.onHide}>
+            <FontAwesomeIcon icon={faThumbsUp}/> Got it
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
@@ -42,12 +46,12 @@ function OtherForm(props) {
   const [modalShow, setModalShow] = React.useState(false)
 
   return (
-    <div>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
-        Assigned to {props.blob.chef}
+    <Container fluid className="fill-div">
+      <Button variant="light" className="fill-button" onClick={() => setModalShow(true)}>
+        Assigned to <em className="other-username">{props.blob.chef}</em>
       </Button>
       <OtherInnerModal show={modalShow} onHide={() => setModalShow(false)} blob={props.blob}/>
-    </div>
+    </Container>
   )
 }
 

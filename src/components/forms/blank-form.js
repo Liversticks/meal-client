@@ -1,9 +1,14 @@
 import React from 'react'
-import { Modal, Button, Row } from 'react-bootstrap'
+import { Modal, Button, Alert, Container } from 'react-bootstrap'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import MealService from '../../requests/meals'
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserPlus, faThumbsUp  } from '@fortawesome/free-solid-svg-icons'
+
+
+import MealService from '../../requests/meals'
+
 
 const formSchema = Yup.object().shape({
   description: Yup.string().required('Please describe your meal.'),
@@ -12,6 +17,7 @@ const formSchema = Yup.object().shape({
 })
 
 function BlankInnerModal(props) {
+  const [isSubmit, setSubmit] = React.useState('')
   const formattedDate = moment(props.blob.date, "MM-DD-YYYY").format("MMMM Do")
   const formattedType = props.blob.type.charAt(0).toUpperCase() + props.blob.type.slice(1)
   return (
@@ -27,7 +33,11 @@ function BlankInnerModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Formik
+        { isSubmit.length > 0 ?
+          <Alert variant={isSubmit === 'Meal scheduled successfully!' ? "success" : "danger"}>
+            { isSubmit }
+          </Alert>
+        : <Formik
         initialValues={{
           date: props.blob.date,
           type: props.blob.type,
@@ -35,8 +45,18 @@ function BlankInnerModal(props) {
         }}
         validationSchema={formSchema}
         onSubmit={ (values, bag) => {
-          console.log(values)
-          bag.setSubmitting(false)
+          MealService.newMeal(values.date, values.type, values.description).then(response => {
+            setSubmit(response.data.message)
+          }).catch(error => {
+            if (error.response) {
+              setSubmit(error.response.data.message)
+            } else if (error.request) {
+              setSubmit(error.request)
+            } else {
+              setSubmit(error.message)
+            }
+          })
+          //bag.setSubmitting(false)
         }}
         >
           {({ errors, touched }) => (
@@ -51,11 +71,19 @@ function BlankInnerModal(props) {
                   <div className="alert alert-danger mt-2">{errors.description}</div>
                 }
               </div>
-              <Button type="submit">Submit</Button>
+              <Button className="float-right" type="submit">Submit</Button>
             </Form>
           )}
         </Formik>
+        }
       </Modal.Body>
+      { isSubmit.length > 0 &&
+        <Modal.Footer>
+          <Button className="float-right" variant="success" onClick={props.onHide}>
+            <FontAwesomeIcon icon={faThumbsUp}/> Got it
+          </Button>
+        </Modal.Footer>
+      }
     </Modal>
   )
 }
@@ -63,12 +91,15 @@ function BlankInnerModal(props) {
 function BlankForm(props) {
   const [modalShow, setModalShow] = React.useState(false)
   return (
-    <div>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
-        Sign Up
+    <Container fluid className="fill-div">
+      <Button variant="success" className="fill-button" onClick={() => setModalShow(true)}>
+        <FontAwesomeIcon className="mr-1" icon={faUserPlus}/> Sign Up
       </Button>
-      <BlankInnerModal show={modalShow} onHide={() => setModalShow(false)} blob={props.blob}/>
-    </div>
+      <BlankInnerModal show={modalShow} onHide={() => {
+        setModalShow(false)
+        props.onUpdate()
+      }} blob={props.blob}/>
+    </Container>
   )
 }
 

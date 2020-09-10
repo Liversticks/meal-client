@@ -1,9 +1,12 @@
 import React from 'react'
-import { Modal, Button, Row } from 'react-bootstrap'
+import { Modal, Button, Alert, Container } from 'react-bootstrap'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import MealService from '../../requests/meals'
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+
+import MealService from '../../requests/meals'
 
 const formSchema = Yup.object().shape({
   description: Yup.string().required('Please describe your meal.'),
@@ -11,7 +14,14 @@ const formSchema = Yup.object().shape({
   type: Yup.string().required()
 })
 
+const validStatus = [
+  'Meal details updated successfully!',
+  'Meal successfully deleted.'
+]
+
 function EditInnerModal(props) {
+  const [status, setStatus] = React.useState('')
+
   const formattedDate = moment(props.blob.date, "MM-DD-YYYY").format("MMMM Do")
   const formattedType = props.blob.type.charAt(0).toUpperCase() + props.blob.type.slice(1)
   return (
@@ -27,7 +37,11 @@ function EditInnerModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Formik
+        { status.length > 0 ?
+          <Alert variant={validStatus.includes(status) ? "success" : "danger" }>
+            {status}
+          </Alert>
+        : <Formik
         initialValues={{
           date: props.blob.date,
           type: props.blob.type,
@@ -35,7 +49,17 @@ function EditInnerModal(props) {
         }}
         validationSchema={formSchema}
         onSubmit={ (values, bag) => {
-          console.log(values)
+          MealService.editMeal(values.date, values.type, values.description).then(response => {
+            setStatus(response.data.message)
+          }).catch(error => {
+            if (error.response) {
+              setStatus(error.response.data.message)
+            } else if (error.request) {
+              setStatus(error.request)
+            } else {
+              setStatus(error.message)
+            }
+          })
           bag.setSubmitting(false)
         }}
         >
@@ -51,15 +75,43 @@ function EditInnerModal(props) {
                   <div className="alert alert-danger mt-2">{errors.description}</div>
                 }
               </div>
-              <Button type="submit">Confirm</Button>
+              <Button className="float-right" type="submit">Submit</Button>
             </Form>
           )}
         </Formik>
+
+        }
+
       </Modal.Body>
-      <Modal.Footer style={{ justifyContent: 'flex-start' }}>
-        <Button variant="danger" onClick={() => console.log('was clicked')}>
-          Delete Meal
+      <Modal.Footer>
+        { status === '' ?
+        <Button variant="danger" onClick={() => {
+          MealService.deleteMeal(props.blob.date, props.blob.type).then(response => {
+            setStatus(response.data.message)
+          }).catch(error => {
+            if (error.response) {
+              setStatus(error.response.data.message)
+              console.log("first branch")
+            } else if (error.request) {
+              setStatus(error.request)
+              console.log("second branch")
+            } else {
+              console.log("third branch")
+              setStatus(error.message)
+            }
+            console.log(error)
+          })
+        }}>
+          <FontAwesomeIcon icon={faTrash}/> Delete Meal
         </Button>
+        : <Button variant="success" onClick={() => {
+          props.onHide()
+          setStatus('')
+        }}>
+            <FontAwesomeIcon icon={faThumbsUp}/> Got it
+          </Button>
+        }
+
       </Modal.Footer>
     </Modal>
   )
@@ -68,12 +120,15 @@ function EditInnerModal(props) {
 function EditForm(props) {
   const [modalShow, setModalShow] = React.useState(false)
   return (
-    <div>
-      <Button variant="info" onClick={() => setModalShow(true)}>
-        Modify
+    <Container fluid>
+      <Button className="fill-button" variant="info" onClick={() => setModalShow(true)}>
+        <FontAwesomeIcon className="mr-1" icon={faEdit}/> Modify
       </Button>
-      <EditInnerModal show={modalShow} onHide={() => setModalShow(false)} blob={props.blob}/>
-    </div>
+      <EditInnerModal show={modalShow} onHide={() => {
+        setModalShow(false)
+        props.onUpdate()
+      }} blob={props.blob}/>
+    </Container>
   )
 }
 
