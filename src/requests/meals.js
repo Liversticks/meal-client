@@ -1,7 +1,9 @@
 import axios from 'axios'
 import authToken from './get-token'
+import localConfig from '../config/local-dev'
 
-const API_URL = 'http://localhost:5000/meals'
+
+const API_URL = localConfig['meal_url']
 
 class MealService {
   newMeal(date, type, description) {
