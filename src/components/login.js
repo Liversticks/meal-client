@@ -1,9 +1,7 @@
 import React from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import MyAuth from '../requests/auth'
 import { withRouter } from 'react-router-dom'
-
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required('Please enter your username.'),
@@ -35,22 +33,23 @@ class Login extends React.Component {
           validationSchema={loginSchema}
           onSubmit={(values, bag) => {
             //If this function is called, validation has occurred successfully
-            MyAuth.login(values.username, values.password).then(
-              () => {
-                this.props.onLogin()
-                this.props.history.push('/meals')
-                //window.location.reload()
-                //update state on successful login
-              },
-              error => {
-                const resMessage = (error.response && error.response.data && error.response.data.message) ||
-                error.message || error.toString()
-                this.setState({
-                  message: resMessage
-                });
-                bag.setSubmitting(false)
+            this.props.onLogin(values.username, values.password).then(response => {
+              if (response.data.accessToken) {
+                localStorage.setItem("user", JSON.stringify(response.data))
+                localStorage.setItem("username", values.username)
               }
-            )
+              this.props.onLoginSuccess()
+              this.props.history.push('/meals')
+              //window.location.reload()
+              //return response.data
+            }).catch(error => {
+              const resMessage = (error.response && error.response.data && error.response.data.message) ||
+              error.message || error.toString()
+              this.setState({
+                message: resMessage
+              });
+              bag.setSubmitting(false)
+            })
             //console.log(values.username)
 
           }}>
