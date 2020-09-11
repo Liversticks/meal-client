@@ -14,10 +14,11 @@ import MainBoard from './components/board/main-board'
 import Footer from './components/footer'
 
 import localConfig from './config/local-dev'
+import prodConfig from './config/prod'
 
-const MEAL_URL = localConfig['meal_url']
-const LOGIN_URL = localConfig['login_url']
-const SIGNUP_URL = localConfig['signup_url']
+const MEAL_URL = process.env.NODE_ENV === 'production' ? prodConfig['meal_url'] : localConfig['meal_url']
+const LOGIN_URL = process.env.NODE_ENV === 'production' ? prodConfig['login_url'] : localConfig['login_url']
+const SIGNUP_URL = process.env.NODE_ENV === 'production' ? prodConfig['signup_url'] : localConfig['signup_url']
 
 class App extends React.Component {
   constructor(props) {
