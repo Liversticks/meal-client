@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Card, Button, Container } from 'react-bootstrap'
+import { Modal, Card, Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
@@ -47,9 +47,18 @@ function OtherForm(props) {
 
   return (
     <Container fluid className="fill-div">
-      <Button variant="light" className="fill-button" onClick={() => setModalShow(true)}>
-        Assigned to <em className="other-username">{props.blob.chef}</em>
-      </Button>
+      <OverlayTrigger
+      placement="top"
+      overlay={
+        <Tooltip>
+          {props.blob.description.length <= 100 ? props.blob.description : props.blob.description.slice(0, 100) + '...' }
+        </Tooltip>
+      }
+      >
+        <Button variant="light" className="fill-button" onClick={() => setModalShow(true)}>
+          Assigned to <em className="other-username">{props.blob.chef}</em>
+        </Button>
+      </OverlayTrigger>
       <OtherInnerModal show={modalShow} onHide={() => setModalShow(false)} blob={props.blob}/>
     </Container>
   )
