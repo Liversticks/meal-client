@@ -65,7 +65,7 @@ function Week(props) {
   })
   return (
     <div>
-      <Table striped bordered className="mt-3">
+      <Table responsive striped bordered className="mt-3">
         <colgroup>
           <col className="table-even"/>
           <col className="table-even"/>
@@ -93,12 +93,15 @@ function Week(props) {
 function CollapseWeek(props) {
   const [open, setOpen] = React.useState(props.opened)
   const firstExpression = moment(props.start).format("MMMM Do")
-  const secondExpression = moment(props.start).month() === moment(props.end).month() ?
-    moment(props.end).format("Do") : moment(props.end).format("MMMM Do")
+  const secondExpression = moment(props.start).format() !== moment(props.end).startOf("day").format() ?
+    moment(props.start).month() === moment(props.end).month() ?
+    moment(props.end).format(" - Do")
+    : moment(props.end).format(" - MMMM Do")
+    : ""
   return (
     <div>
       <Row className="mt-2 mb-2 text-light bg-dark-1 border border-secondary">
-        <Col xs={10}><h3>Week of {`${firstExpression} - ${secondExpression}`}</h3></Col>
+        <Col xs={10}><h3>Week of {`${firstExpression}${secondExpression}`}</h3></Col>
         <Col className="toggle-collapse">
           <FontAwesomeIcon className="mt-2" size="lg" onClick={() => setOpen(!open)} icon={open ? faMinusCircle : faPlusCircle }/>
         </Col>
