@@ -15,7 +15,9 @@ const signupSchema = Yup.object().shape({
     .required('Password is required'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Must confirm password')
+    .required('Must confirm password'),
+  birthday: Yup.date()
+    .required('Birthday is required')
 });
 
 
@@ -39,13 +41,15 @@ class Signup extends React.Component {
                 username: '',
                 email: '',
                 password: '',
-                confirmPassword: ''
+                confirmPassword: '',
+                birthday: ''
               }}
               validationSchema={signupSchema}
               onSubmit={(values, bag) => {
                 //Send data to the server
                 //TEMP
-                this.props.onSignup(values.username, values.email, values.password).then(response => {
+                //console.log(values.birthday)
+                this.props.onSignup(values.username, values.email, values.password, values.birthday).then(response => {
                   if (response.data.message && response.data.message === 'Signed up successfully!') {
                     this.setState({
                       message: response.data.message
@@ -83,6 +87,11 @@ class Signup extends React.Component {
                     <label htmlFor="confirmPassword">Confirm Password</label>
                     <Field name="confirmPassword" type="password" className='form-control'/>
                     {touched.confirmPassword && errors.confirmPassword && <div className="alert alert-danger mt-2">{errors.confirmPassword}</div>}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="birthday">Birthday</label>
+                    <Field name="birthday" type="date" className="form-control"/>
+                    {touched.birthday && errors.birthday && <div className="alert alert-danger mt-2">{errors.birthday}</div>}
                   </div>
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary mr-2">Sign Up</button>

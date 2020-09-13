@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 function MealNav(props) {
   return (
-    <Navbar sticky="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar sticky="top" collapseOnSelect expand="sm" bg="dark" variant="dark">
       <LinkContainer to={"/"}>
         <Navbar.Brand>Meals</Navbar.Brand>
       </LinkContainer>

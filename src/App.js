@@ -56,11 +56,7 @@ class App extends React.Component {
       }
     })
   }
-
-  signup() {
-    return axios.post()
-  }
-
+  
   login(username, password) {
     return axios.post(LOGIN_URL, {
       username: username,
@@ -68,11 +64,12 @@ class App extends React.Component {
     })
   }
 
-  onSignup(username, email, password) {
+  onSignup(username, email, password, birthday) {
     return axios.post(SIGNUP_URL, {
       username: username,
       email: email,
-      password: password
+      password: password,
+      birthday: birthday
     })
   }
 
