@@ -7,6 +7,11 @@ td.centered-cell {
   font-weight: 750;
 }
 
+.holiday {
+  font-size: 18px;
+  font-weight: 700;
+}
+
 .bg-dark-1 {
   background-color: #525151;
 }

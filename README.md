@@ -1,4 +1,18 @@
+# Meal Client
+
+Created by Liversticks (Oliver X.)  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Libraries used:
+
+* React framework
+* React Router
+* React Bootstrap for responsive components
+* Formik + Yup for form validation
+* Moment for better dates
+* Axios for API consumption
+* Font Awesome for icons 
+
 
 ## Available Scripts
 
