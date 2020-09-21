@@ -55,6 +55,7 @@ function Week(props) {
           retObj['dayBlob']['snackBlob']['description'] = props.dates[dateString]['snack']['meal_desc']
           retObj['dayBlob']['snackBlob']['chef'] = props.dates[dateString]['snack']['chef']
         }
+        retObj['dayBlob']['holiday'] = props.dates[dateString]['holiday']
       }
       return retObj
   })

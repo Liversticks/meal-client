@@ -6,7 +6,8 @@ import { withRouter } from 'react-router-dom'
 //Adjust validation constraints
 const signupSchema = Yup.object().shape({
   username: Yup.string()
-    .required('Username is required'),
+    .required('Username is required')
+    .max(20, 'Username cannot be more than 20 characters long'),
   email: Yup.string()
     .email('Email is invalid')
     .required('Email is required'),

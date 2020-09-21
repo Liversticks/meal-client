@@ -10,6 +10,7 @@ function Day(props) {
             <Col>
               <div className="day-of-week">{props.blob.dayOfWeek}</div>
               <div>{props.blob.formattedDay}</div>
+              { props.blob.holiday && props.blob.holiday.length > 0 && <div className="holiday">{props.blob.holiday}</div>}
             </Col>
           </div>
         </td>
