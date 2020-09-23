@@ -12,6 +12,11 @@ function MealNav(props) {
       <Navbar.Collapse>
         <Nav className="mr-auto">
           { props.isLoggedIn &&
+            <LinkContainer to={"/profile"} onClick={props.onProfile}>
+              <Nav.Link>Profile</Nav.Link>
+            </LinkContainer>
+          }
+          { props.isLoggedIn &&
             <Nav.Link href="/login" onClick={props.onLogout}>
               Logout
             </Nav.Link>

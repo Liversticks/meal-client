@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
 import axios from 'axios'
@@ -12,6 +12,7 @@ import MealNav from './components/navbar'
 import Signup from './components/signup'
 import Login from './components/login'
 import MainBoard from './components/board/main-board'
+import Profile from './components/profile'
 import Footer from './components/footer'
 
 import localConfig from './config/local-dev'
@@ -20,6 +21,7 @@ import prodConfig from './config/prod'
 const MEAL_URL = process.env.NODE_ENV === 'production' ? prodConfig['meal_url'] : localConfig['meal_url']
 const LOGIN_URL = process.env.NODE_ENV === 'production' ? prodConfig['login_url'] : localConfig['login_url']
 const SIGNUP_URL = process.env.NODE_ENV === 'production' ? prodConfig['signup_url'] : localConfig['signup_url']
+const USERS_URL = process.env.NODE_ENV === 'production' ? prodConfig['users_url'] : localConfig['users_url']
 
 class App extends React.Component {
   constructor(props) {
@@ -28,9 +30,15 @@ class App extends React.Component {
     this.state = {
       currentUser: getCurrentUser() ? getCurrentUser(): undefined,
       mealList: [],
-      loginStale: false
+      loginStale: false,
+      profile: {
+        username: '',
+        email: '',
+        birthday: ''
+      }
     }
     this.update = this.update.bind(this)
+    this.getUserData = this.getUserData.bind(this)
   }
 
   update() {
@@ -56,7 +64,7 @@ class App extends React.Component {
       }
     })
   }
-  
+
   login(username, password) {
     return axios.post(LOGIN_URL, {
       username: username,
@@ -77,9 +85,24 @@ class App extends React.Component {
     localStorage.removeItem("user")
     localStorage.removeItem("username")
     this.setState({
-      loginStale: false
+      loginStale: false,
+      profile: {
+        username: '',
+        email: '',
+        birthday: ''
+      }
     })
     //window.alert('Successfully logged out.')
+  }
+
+  getUserData() {
+    axios.get(USERS_URL, { headers: authToken() }).then(
+      response => {
+        this.setState({
+          profile: response.data
+        })
+      }
+    )
   }
 
   componentDidMount() {
@@ -89,7 +112,7 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-          <MealNav isLoggedIn={this.state.currentUser !== undefined} onLogout={this.logout}/>
+          <MealNav isLoggedIn={this.state.currentUser !== undefined} onLogout={this.logout} onProfile={this.getUserData}/>
           <div>
             <Switch>
               <Route exact path={["/", "/meals"]}>
@@ -100,6 +123,9 @@ class App extends React.Component {
               </Route>
               <Route exact path="/signup">
                 { this.state.currentUser ? <Redirect to="/meals" /> : <Signup onSignup={this.onSignup}/>}
+              </Route>
+              <Route exact path="/profile">
+                { this.state.currentUser ? <Profile profile={this.state.profile}/> : <Redirect to="/login"/> }
               </Route>
             </Switch>
           </div>
