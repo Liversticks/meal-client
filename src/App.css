@@ -43,3 +43,11 @@ td.centered-cell {
 .fill-div {
   height: 100%;
 }
+
+.submit-image {
+  border: solid #46D61A;
+  background-color: #46D61A;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
