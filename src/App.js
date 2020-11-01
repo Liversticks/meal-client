@@ -21,7 +21,6 @@ import prodConfig from './config/prod'
 const MEAL_URL = process.env.NODE_ENV === 'production' ? prodConfig['meal_url'] : localConfig['meal_url']
 const LOGIN_URL = process.env.NODE_ENV === 'production' ? prodConfig['login_url'] : localConfig['login_url']
 const SIGNUP_URL = process.env.NODE_ENV === 'production' ? prodConfig['signup_url'] : localConfig['signup_url']
-const USERS_URL = process.env.NODE_ENV === 'production' ? prodConfig['users_url'] : localConfig['users_url']
 
 class App extends React.Component {
   constructor(props) {
@@ -31,14 +30,8 @@ class App extends React.Component {
       currentUser: getCurrentUser() ? getCurrentUser(): undefined,
       mealList: [],
       loginStale: false,
-      profile: {
-        username: '',
-        email: '',
-        birthday: ''
-      }
     }
     this.update = this.update.bind(this)
-    this.getUserData = this.getUserData.bind(this)
   }
 
   update() {
@@ -95,16 +88,6 @@ class App extends React.Component {
     //window.alert('Successfully logged out.')
   }
 
-  getUserData() {
-    axios.get(USERS_URL, { headers: authToken() }).then(
-      response => {
-        this.setState({
-          profile: response.data
-        })
-      }
-    )
-  }
-
   componentDidMount() {
     this.update()
   }
@@ -112,7 +95,7 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-          <MealNav isLoggedIn={this.state.currentUser !== undefined} onLogout={this.logout} onProfile={this.getUserData}/>
+          <MealNav isLoggedIn={this.state.currentUser !== undefined} onLogout={this.logout}/>
           <div>
             <Switch>
               <Route exact path={["/", "/meals"]}>
@@ -125,7 +108,7 @@ class App extends React.Component {
                 { this.state.currentUser ? <Redirect to="/meals" /> : <Signup onSignup={this.onSignup}/>}
               </Route>
               <Route exact path="/profile">
-                { this.state.currentUser ? <Profile profile={this.state.profile}/> : <Redirect to="/login"/> }
+                { this.state.currentUser ? <Profile/> : <Redirect to="/login"/> }
               </Route>
             </Switch>
           </div>
