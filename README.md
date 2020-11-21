@@ -1,82 +1,69 @@
 # Meal Client
 
+React single-page application for this [meal scheduler](https://github.com/Liversticks/meal-client).
 Created by Liversticks (Oliver X.)  
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## What is this?
+
+This is an app that allows users to schedule meals/snacks and list ingredients.
+For now, it's a good introduction to the React ecosystem.
 
 ## Libraries used:
 
-* React framework
+* React
 * React Router
-* React Bootstrap for responsive components
-* Formik + Yup for form validation
-* Moment for better dates
-* Axios for API consumption
-* Font Awesome for icons 
+* React Bootstrap
+* Formik + Yup (forms and validation)
+* Moment
+* Axios
+* Font Awesome (icons)
 
+## Features
 
-## Available Scripts
+* Figure out who's making breakfast, lunch, dinner, snack and what it will be.
 
-In the project directory, you can run:
+## Building
 
-### `npm start`
+1. Set URLs in `local-dev.js` and `prod.js` to their development and production variants, respectively
+2. Run `npm start` to launch the development server or `npm run build` to create a production-ready build.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can also run `npm test` and `npm run eject` as this project was created using [Create React App](https://github.com/facebook/create-react-app).
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Tests
 
-### `npm test`
+Work in Progress
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage
 
-### `npm run build`
+### Signup
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Creates a new user. Required fields: username, password, email, birthday.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Login
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Upon successful login, a JWT token is created and stored in browser storage. This token is used to authenicate requests.
 
-### `npm run eject`
+### Meals (main screen)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* A dropdown holds each week's meals.
+* A green button indicates that meal slot is available. Click on the button and fill out the form with your planned meal information, then submit.
+* A cyan button indicates that you previously signed up for that slot. You can change what you plan to make or delete your scheduled meal (letting someone else sign up).
+* A greyed-out button indicates that someone else is signed up for that slow. You can view what they plan to cook by clicking on that button.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Profile
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+You can view your profile picture, email, and birthday. You can also choose to upload a new profile picture or delete your current one.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## License
 
-## Learn More
+MIT License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Copyright (c) 2020 Oliver Xie
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-### Code Splitting
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Distributions of all or part of the Software intended to be used by the recipients as they would use the unmodified Software, containing modifications that substantially alter, remove, or disable functionality of the Software, outside of the documented configuration mechanisms provided by the Software, shall be modified such that the Original Author's bug reporting email addresses and urls are either replaced with the contact information of the parties responsible for the changes, or removed entirely.
 
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

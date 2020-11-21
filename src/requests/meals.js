@@ -7,8 +7,9 @@ const API_URL = process.env.NODE_ENV === 'production' ? prodConfig['meal_url'] :
 
 class MealService {
   newMeal(date, type, description) {
+    console.log(date)
     return axios.post(API_URL, {
-      date: date,
+      meal_date: date,
       meal_type: type,
       meal_desc: description
     }, {
@@ -18,7 +19,7 @@ class MealService {
 
   editMeal(date, type, description) {
     return axios.put(API_URL, {
-      date: date,
+      meal_date: date,
       meal_type: type,
       meal_desc: description
     }, {
@@ -33,7 +34,7 @@ class MealService {
       method: 'delete',
       headers: authToken(),
       data: {
-        date: date,
+        meal_date: date,
         meal_type: type
       }
     })
